@@ -1,0 +1,10 @@
+/* style.css */
+#good-rest-settings-form .routes-table-header {
+	background: #fff;
+
+}
+
+#good-rest-settings-form  .routes-table tbody tr{
+	border: 1px solid #ccc;
+
+}
