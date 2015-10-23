@@ -18,7 +18,6 @@ class GoodREST {
 	/**
 	* API key to authorize requests
 	* 
-	* @since GoodRESTRouter (0.1)
 	* @var string $api_key
 	*/	
 	static public $api_key;
@@ -26,7 +25,6 @@ class GoodREST {
 	/**
 	* API endpoint path
 	* 
-	* @since GoodRESTRouter (0.1)
 	* @var string $api_endpoint
 	*/
 	static public $api_endpoint;
@@ -34,7 +32,6 @@ class GoodREST {
 	/**
 	* Array of defined routes
 	* 
-	* @since GoodREST (0.1)
 	* @var array $routes
 	*/
 	static public $routes = array();
@@ -42,7 +39,6 @@ class GoodREST {
 	/**
 	* Array of built in routes for registerd post types
 	* 
-	* @since GoodREST (0.1)
 	* @var array $built_in_routes
 	*/
 	static public $built_in_routes = array();
@@ -50,7 +46,6 @@ class GoodREST {
 	/**
 	* GoodRESTRouter instance
 	* 
-	* @since GoodREST (0.1)
 	* @access protected
 	* @var GoodRESTRouter $router
 	*/
@@ -59,7 +54,6 @@ class GoodREST {
 	/**
 	* GoodRESTUtil instance
 	* 
-	* @since GoodREST (0.1)
 	* @access protected
 	* @var GoodRESTUtil $router
 	*/
@@ -68,7 +62,6 @@ class GoodREST {
 	/**
 	* Set up GoodREST
 	* 
-	* @since GoodREST (0.1)
 	*/
 	static public function init () {
 		self::$api_endpoint = get_option("good_rest_api_endpoint_prefix") ? get_option("good_rest_api_endpoint_prefix") : "api";
@@ -82,8 +75,8 @@ class GoodREST {
 	* Add new GET route
 	* 
 	* @since GoodREST (0.1)
-	* @var string $path
-	* @var function $callback
+	* @param string $path
+	* @param function $callback
 	*/
 	static public function get($path, $callback) {
 		self::add_route($path, array("GET"), $callback);
@@ -93,8 +86,8 @@ class GoodREST {
 	* Add new POST route
 	* 
 	* @since GoodREST (0.1)
-	* @var string $path
-	* @var function $callback
+	* @param string $path
+	* @param function $callback
 	*/
 	static public function post($path, $callback) {
 		self::add_route($path, array("POST"), $callback);
@@ -104,8 +97,8 @@ class GoodREST {
 	* Add new PUT route
 	* 
 	* @since GoodREST (0.1)
-	* @var string $path
-	* @var function $callback
+	* @param string $path
+	* @param function $callback
 	*/
 	static public function put($path, $callback) {
 		self::add_route($path, array("PUT", "OPTIONS"), $callback);
@@ -114,9 +107,8 @@ class GoodREST {
 	/**
 	* Add new DELETE route
 	* 
-	* @since GoodREST (0.1)
-	* @var string $path
-	* @var function $callback
+	* @param string $path
+	* @param function $callback
 	*/
 	static public function delete($path, $callback) {
 		self::add_route($path, array("DELETE", "OPTIONS"), $callback);
@@ -125,10 +117,9 @@ class GoodREST {
 	/**
 	* Add route to list of routes
 	* 
-	* @since GoodREST (0.1)
-	* @var string $path
-	* @var array $http_method
-	* @var function $callback
+	* @param string $path
+	* @param array $http_method
+	* @param function $callback
 	*/
 	public function add_route($path, $http_method, $callback) {
 		$route = new stdClass();
@@ -142,26 +133,15 @@ class GoodREST {
 	/**
 	* Send response to client
 	* 
-	* @since GoodREST (0.1)
-	* @var string $path
-	* @var int $status
-	* @var string $content_type
+	* @param string $path
+	* @param int $status
+	* @param string $content_type
 	*/
 	static public function response($response, $status = 200, $content_type = "text/html") {
 		 status_header( $status );
 		 header("Content-type: " . $content_type);
 		 echo $response;
 		 exit;
-	}
-
-	/**
-	* Get request parameter
-	* 
-	* @since GoodREST (0.1)
-	* @var string $param
-	*/
-	static public function param($param) {
-		
 	}
 
 }

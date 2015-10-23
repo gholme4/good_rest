@@ -24,7 +24,6 @@ class GoodRESTUtil {
 	/**
 	* Enqueue admin scripts
 	* 
-	* @since GoodRESTRouter (0.1)
 	*/
 	public function admin_scripts() {
 		wp_enqueue_script( 'good_rest_admin_script', plugin_dir_url( __FILE__ ) . '/../../assets/js/script.js', array("jquery"), '1.0');
@@ -35,7 +34,6 @@ class GoodRESTUtil {
 	/**
 	* WordPress init hook functions
 	* 
-	* @since GoodRESTRouter (0.1)
 	*/
 	public function wp_init() {
 			
@@ -46,7 +44,6 @@ class GoodRESTUtil {
 	/**
 	* Enqueue admin scripts
 	* 
-	* @since GoodRESTRouter (0.1)
 	*/
 	public function admin_pages() {
 		add_menu_page(

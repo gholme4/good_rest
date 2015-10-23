@@ -18,7 +18,6 @@ class GoodRESTRouter {
 	/**
 	* Array of custom post type routes
 	* 
-	* @since GoodRESTRouter (0.1)
 	* @var GoodRESTCustomPostTypesRoutes
 	*/
 	protected $post_types_routes = array();
@@ -32,8 +31,8 @@ class GoodRESTRouter {
 	/**
 	* Get header value
 	* 
-	* @since GoodRESTRouter (0.1)
-	* @var string $header
+	* @since GoodRESTRouter (.1)
+	* @param string $header
 	*
 	* @return string
 	*/
@@ -51,7 +50,6 @@ class GoodRESTRouter {
 	/**
 	* Check URL against defined routes
 	* 
-	* @since GoodRESTRouter (0.1)
 	*/
 	public function match_routes() {
 
@@ -65,7 +63,7 @@ class GoodRESTRouter {
 
 			// Build route match URI and escape slashes
 			$route_match = get_site_url() . '/' . GoodREST::$api_endpoint . '/' . $route->path;
-			error_log($route_match, 0);
+			
 			$route_match = str_replace("/" , '\/', $route_match);
 
 			// Replace params in route match with regex pattern for checking against this route
@@ -104,6 +102,16 @@ class GoodRESTRouter {
 					// For clients (browsers) that send OPTIONS request before DELETE and PUT
 					GoodREST::response("");
 				}
+				
+				if ($_SERVER['REQUEST_METHOD'] == 'PUT' || $_SERVER['REQUEST_METHOD'] == 'DELETE')
+				{
+					// Add all parameters to from $_PUT request to $params array
+					parse_str(file_get_contents("php://input"),$post_vars);
+					foreach($post_vars as $key=>$val) 
+					{
+						$params[$key] = $val;
+					}
+				}
 
 				if ($this->get_header("x-wp-api-key") != GoodREST::$api_key)
 				{
@@ -112,7 +120,6 @@ class GoodRESTRouter {
 
 				// Run callback and pass parameters from $_REQUEST and URI
 				call_user_func_array($route->callback, array($params));
-				exit;
 				
 			}
 			else
@@ -127,7 +134,6 @@ class GoodRESTRouter {
 	/**
 	* get current URI
 	* 
-	* @since GoodRESTRouter (0.1)
 	* @return string
 	*/
 

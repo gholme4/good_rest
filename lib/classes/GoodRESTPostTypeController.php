@@ -18,36 +18,110 @@ class GoodRESTPostTypeController {
 	/**
 	* Post type slug
 	* 
-	* @since GoodRESTCustomPostTypesRoutes (0.1)
 	* @var string $post_type
 	*/
-	protected $post_type;
+	public static $post_type;
 
-	function __construct($post_type) {
-		
+	/**
+	* Get single post
+	* 
+	* @param array $params
+	*
+	*/
+	public function get($params) {
+		$response = new stdClass();
+		$post = get_post($params['id']);
+
+		if (!$post || $post->post_type != GoodRESTPostTypeController::$post_type)
+		{
+			$response->error = _("Post does not exist.");
+		}
+		else
+		{
+			$response->post = $post;
+		}
+
+		GoodREST::response(json_encode($response), 200);
 	}
 
-	public function get() {
-		
+	/**
+	* Create new post
+	* 
+	* @param array $params
+	*
+	*/
+	public function post($params) {
+		GoodREST::response("", 200);
 	}
 
-	public function post() {
-		
+	/**
+	* Update post
+	* 
+	* @param array $params
+	*
+	*/
+	public function put($params) {
+		 if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
+		 {
+        	
+        	define( 'GR_SAVE_POST_DATA', TRUE );    
+ 			$response = new stdClass();
+			$post = get_post($params['id']);
+			if (!$post || $post->post_type != GoodRESTPostTypeController::$post_type)
+			{
+				$response->error = _("Post does not exist.");
+			}
+			else
+			{
+				$params['ID'] = $params['id'];
+				unset($params["id"]);
+				wp_update_post( $params );
+				$response->post = $post;
+			}
+
+			GoodREST::response(json_encode($response), 200);
+		}
 	}
 
-	public function put() {
-		
+	/**
+	* Delete post
+	* 
+	* @param array $params
+	*
+	*/
+	public function delete($params) {
+		if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
+		{
+
+			define( 'GR_SAVE_POST_DATA', TRUE );
+			$response = new stdClass();
+			$post = get_post($params['id']);
+			if (!$post || $post->post_type != GoodRESTPostTypeController::$post_type)
+			{
+				$response->error = _("Post does not exist.");
+			}
+			else
+			{
+				$response->post = wp_delete_post($params['id']);	
+			}
+				
+			GoodREST::response(json_encode($response), 200);
+		}
 	}
 
-	public function delete() {
-		
+	/**
+	* Get posts
+	* 
+	* @param array $params
+	*
+	*/
+	public function query($params) {
+		GoodREST::response("", 200);
 	}
-
-	public function query() {
-		
-	}
+	
 
 }
+
 
 endif;
 
