@@ -10,6 +10,11 @@ Good REST is a WordPress plugin designed to open add REST API functionality to W
 ### Installation
 Download the zip of this repo and paste its contents in your site's plugins folder.
 
+### Dashboard settings page
+In the WordPress admin click the Good REST settings menu item to get to the settings page. There you have options to change the API endpoint prefix and generate a new API key. There is also a list of routes displayed. 
+
+There are built in routes generated from registered post types. Each can be disabled by unchecking the box next it.
+
 ### Developer Instructions
 To create routes, define them in the theme's functions file. It's possible to define dynamic routes for GET, POST, DELETE, and PUT requests and send parameters with each.
 #### Code examples
