@@ -18,7 +18,6 @@ class GoodRESTCustomPostTypesRoutes {
 	/**
 	* Array of post type slugs
 	* 
-	* @since GoodRESTCustomPostTypesRoutes (0.1)
 	* @var array $post_types
 	*/
 	protected $post_types;
@@ -31,7 +30,6 @@ class GoodRESTCustomPostTypesRoutes {
 	/**
 	* Get slugs of (almost) all registered post types
 	* 
-	* @since GoodRESTCustomPostTypesRoutes (0.1)
 	* @return string
 	*/
 
@@ -48,56 +46,54 @@ class GoodRESTCustomPostTypesRoutes {
 	}
 
 	/**
-	* Register routes for all registered post types
+	* Register routes for (almost) all registered post types
 	* 
-	* @since GoodRESTCustomPostTypesRoutes (0.1)
 	*/
 
 	protected function build_cpt_routes () {
 
 		foreach( $this->post_types  as $type )
 	    {	
-	    	GoodRESTPostTypeController::$post_type = $type;
 
 	    	if (get_option('good_rest_' . $type . '_get_enabled') == true )
 	    	{
-		    	GoodREST::get($type . "/:id", function ($params) {
-		    		$controller = new GoodRESTPostTypeController();
+		    	GoodREST::get($type . "/:id", function ($params, $args) {
+		    		$controller = new GoodRESTPostTypeController($args['post_type']);
 					$controller->get($params);
-				});
+				}, array("post_type" => $type) );
 		    }
 
 		    if (get_option('good_rest_' . $type . '_post_enabled') == true )
 	    	{
-				GoodREST::post($type, function ($params) {
-					$controller = new GoodRESTPostTypeController();
-					$controller->get($params);
-				});
+				GoodREST::post($type, function ($params, $args) {
+					$controller = new GoodRESTPostTypeController($args['post_type']);
+					$controller->post($params);
+				}, array("post_type" => $type) );
 			}
 
 			if (get_option('good_rest_' . $type . '_put_enabled') == true )
 	    	{
-				GoodREST::put($type . "/:id", function ($params) {
+				GoodREST::put($type . "/:id", function ($params, $args) {
 
-					$controller = new GoodRESTPostTypeController();
+					$controller = new GoodRESTPostTypeController($args['post_type']);
 					$controller->put($params);
-				});
+				}, array("post_type" => $type) );
 			}
 
 			if (get_option('good_rest_' . $type . '_delete_enabled') == true )
 	    	{
-				GoodREST::delete($type . "/:id", function ($params) {
-					$controller = new GoodRESTPostTypeController();
+				GoodREST::delete($type . "/:id", function ($params, $args) {
+					$controller = new GoodRESTPostTypeController($args['post_type']);
 					$controller->delete($params);
-				});
+				}, array("post_type" => $type) );
 			}
 
 			if (get_option('good_rest_' . $type . '_query_enabled') == true )
 	    	{
-				GoodREST::post($type . "/q", function ($params) {
-					$controller = new GoodRESTPostTypeController();
+				GoodREST::post($type . "/q", function ($params, $args) {
+					$controller = new GoodRESTPostTypeController($args['post_type']);
 					$controller->query($params);
-				});
+				}, array("post_type" => $type) );
 			}
 	    }
 

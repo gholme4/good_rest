@@ -65,7 +65,7 @@ class GoodREST {
 	*/
 	static public function init () {
 		self::$api_endpoint = get_option("good_rest_api_endpoint_prefix") ? get_option("good_rest_api_endpoint_prefix") : "api";
-		self::$api_key = get_option("good_rest_api_key");
+		self::$api_key = get_option("good_rest_api_key") ? get_option("good_rest_api_key") : uniqid();
 		self::$router = new GoodRESTRouter();
 		self::$util = new GoodRESTUtil();
 	
@@ -77,9 +77,10 @@ class GoodREST {
 	* @since GoodREST (0.1)
 	* @param string $path
 	* @param function $callback
+	* @param array $args
 	*/
-	static public function get($path, $callback) {
-		self::add_route($path, array("GET"), $callback);
+	static public function get($path, $callback, $args = null) {
+		self::add_route($path, array("GET"), $callback, $args);
 	}
 
 	/**
@@ -88,9 +89,10 @@ class GoodREST {
 	* @since GoodREST (0.1)
 	* @param string $path
 	* @param function $callback
+	* @param array $args
 	*/
-	static public function post($path, $callback) {
-		self::add_route($path, array("POST"), $callback);
+	static public function post($path, $callback, $args = null) {
+		self::add_route($path, array("POST"), $callback, $args);
 	}
 
 	/**
@@ -99,9 +101,10 @@ class GoodREST {
 	* @since GoodREST (0.1)
 	* @param string $path
 	* @param function $callback
+	* @param array $args
 	*/
-	static public function put($path, $callback) {
-		self::add_route($path, array("PUT", "OPTIONS"), $callback);
+	static public function put($path, $callback, $args = null) {
+		self::add_route($path, array("PUT", "OPTIONS"), $callback, $args);
 	}
 
 	/**
@@ -109,9 +112,10 @@ class GoodREST {
 	* 
 	* @param string $path
 	* @param function $callback
+	* @param array $args
 	*/
-	static public function delete($path, $callback) {
-		self::add_route($path, array("DELETE", "OPTIONS"), $callback);
+	static public function delete($path, $callback, $args = null) {
+		self::add_route($path, array("DELETE", "OPTIONS"), $callback, $args);
 	}
 
 	/**
@@ -120,12 +124,14 @@ class GoodREST {
 	* @param string $path
 	* @param array $http_method
 	* @param function $callback
+	* @param array $args
 	*/
-	public function add_route($path, $http_method, $callback) {
+	public function add_route($path, $http_method, $callback, $args = null) {
 		$route = new stdClass();
 		$route->path = $path;
 		$route->http_method = $http_method;
 		$route->callback = $callback;
+		$route->args = $args;
 		self::$routes[] = $route;
 		
 	}

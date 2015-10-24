@@ -20,7 +20,11 @@ class GoodRESTPostTypeController {
 	* 
 	* @var string $post_type
 	*/
-	public static $post_type;
+	protected $post_type;
+
+	function __construct ($post_type) {
+		$this->post_type = $post_type;
+	}
 
 	/**
 	* Get single post
@@ -30,9 +34,12 @@ class GoodRESTPostTypeController {
 	*/
 	public function get($params) {
 		$response = new stdClass();
-		$post = get_post($params['id']);
 
-		if (!$post || $post->post_type != GoodRESTPostTypeController::$post_type)
+		// Get post by ID
+		$post = get_post($params['id']);
+		
+		// Check if post exists and if it is of the requested post type
+		if (!$post || $post->post_type != $this->post_type)
 		{
 			$response->error = _("Post does not exist.");
 		}
@@ -61,13 +68,18 @@ class GoodRESTPostTypeController {
 	*
 	*/
 	public function put($params) {
-		 if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
-		 {
+		// Check for constant and define it when calling this function, to prevent an infinite loop from the "save_post" hook
+		if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
+		{
         	
         	define( 'GR_SAVE_POST_DATA', TRUE );    
  			$response = new stdClass();
+
+ 			// Get post by ID
 			$post = get_post($params['id']);
-			if (!$post || $post->post_type != GoodRESTPostTypeController::$post_type)
+
+			// Check if post exists and if it is of the requested post type
+			if (!$post || $post->post_type != $this->post_type)
 			{
 				$response->error = _("Post does not exist.");
 			}
@@ -90,13 +102,18 @@ class GoodRESTPostTypeController {
 	*
 	*/
 	public function delete($params) {
+		// Check for constant and define it when calling this function, to prevent an infinite loop from the "save_post" hook
 		if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
 		{
 
 			define( 'GR_SAVE_POST_DATA', TRUE );
 			$response = new stdClass();
+			
+			// Get post by ID
 			$post = get_post($params['id']);
-			if (!$post || $post->post_type != GoodRESTPostTypeController::$post_type)
+
+			// Check if post exists and if it is of the requested post type
+			if (!$post || $post->post_type != $this->post_type)
 			{
 				$response->error = _("Post does not exist.");
 			}

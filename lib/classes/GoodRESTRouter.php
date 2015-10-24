@@ -74,7 +74,7 @@ class GoodRESTRouter {
 			// Add delimiters to route match pattern
 			$route_match = "/" . $route_match . "$/";
 			
-			// If route path pattern matches URI...
+			// If route path pattern matches URI and request has valid HTTP method...
 			if ( preg_match( $route_match, $this->uri(), $param_matches) && in_array($_SERVER['REQUEST_METHOD'], $route->http_method) )
 			{
 				// Enable CORS, etc.
@@ -119,7 +119,7 @@ class GoodRESTRouter {
 				}
 
 				// Run callback and pass parameters from $_REQUEST and URI
-				call_user_func_array($route->callback, array($params));
+				call_user_func_array($route->callback, array($params, $route->args));
 				
 			}
 			else
