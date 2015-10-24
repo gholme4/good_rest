@@ -178,6 +178,4 @@ $good_rest_api_key = get_option("good_rest_api_key") ? get_option("good_rest_api
 		<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Settings"></p></form>
 	</form>
 	
-
-
 </div>

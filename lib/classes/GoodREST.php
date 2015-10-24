@@ -1,174 +1,101 @@
-<?php
-/**
-* GoodREST
-* Requests need to be of type application/x-www-form-urlencoded 
-* Requires PHP 5.3.0 and above
-*
-* @version 0.1
-* @package GoodREST
-* @link      https://github.com/gholme4/good_rest/
-* @copyright Copyright (c) 2015 George Holmes II
-* @license   GPLv2 or later
-*/
-	
-if ( ! class_exists( 'GoodREST' ) ) :
+# Good REST
 
-class GoodREST {
+Good REST is a WordPress plugin designed to open add REST API functionality to WordPress installations. This plugin is only intended to allow remote requests and not local routing. Features include:
 
-	/**
-	* API key to authorize requests
-	* 
-	* @var string $api_key
-	*/	
-	static public $api_key;
+  - Developer defined routes similar to Slim framework format
+  - User enabled built-in routes from registerd post types
+  - API key authentication
+  - Dashboard page for managing plugin settings
 
-	/**
-	* API endpoint path
-	* 
-	* @var string $api_endpoint
-	*/
-	static public $api_endpoint;
+### Installation
+Download the zip of this repo and paste its contents in your site's plugins folder.
 
-	/**
-	* Array of defined routes
-	* 
-	* @var array $routes
-	*/
-	static public $routes = array();
+### Developer Instructions
+To create routes, define them in the theme's functions file. It's possible to define dynamic routes for GET, POST, DELETE, and PUT requests and send parameters with each.
+#### Code examples
 
-	/**
-	* Array of built in routes for registerd post types
-	* 
-	* @var array $built_in_routes
-	*/
-	static public $built_in_routes = array();
-	
-	/**
-	* Array of user defined routes
-	* 
-	* @var array $custom_routes
-	*/
-	static public $custom_routes = array();
+##### GET request
+#
+```php
+GoodREST::get("get_page/:id", function ($params) {
+    // Logic here...
+	GoodREST::response(json_encode($data));
+});
+```
+> In the above example, $params will be an associative array containing "id" and query string parameters
 
-	/**
-	* GoodRESTRouter instance
-	* 
-	* @access protected
-	* @var GoodRESTRouter $router
-	*/
-	static protected $router;
+##### POST request
+#
+```php
+GoodREST::post("create_page", function ($params) {
+    // Logic here...
+	GoodREST::response("Page created.");
+});
+```
 
-	/**
-	* GoodRESTUtil instance
-	* 
-	* @access protected
-	* @var GoodRESTUtil $router
-	*/
-	static protected $util;
+##### PUT request
+#
+```php
+GoodREST::pust("update_page/:page_id", function ($params) {
+    // Logic here...
+	GoodREST::response("Page updated.");
+});
+```
 
-	/**
-	* Set up GoodREST
-	* 
-	*/
-	static public function init () {
-		self::$api_endpoint = get_option("good_rest_api_endpoint_prefix") ? get_option("good_rest_api_endpoint_prefix") : "api";
-		self::$api_key = get_option("good_rest_api_key") ? get_option("good_rest_api_key") : uniqid();
-		self::$router = new GoodRESTRouter();
-		self::$util = new GoodRESTUtil();
-	
+##### DELETE request
+#
+```php
+GoodREST::delete("delete_page/:page_id", function ($params) {
+    // Logic here...
+	GoodREST::response("Page deleted.");
+});
+```
+This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
+
+#### Responses
+Always be sure to output a response in callbacks. GoodREST::response() can be used to send responses back to the client. Response content, status code, and content type can be passed as parameters.
+```php
+GoodREST::get("some_route", function ($params) {
+	GoodREST::response("Response content", 200, "text/html");
+});
+```
+#### Notes
+When defining routes they will be prepended with your site URL and an api endpoint prefix which can be defined in the Good REST settings page. If the name of your is site "http://website.com" and your api endpoint prefix is "api", the code
+```php
+GoodREST::get("some_route", function ($params) {
+	GoodREST::response("Response content");
+});
+```
+will result in the route "http://website.com/api/some_route".
+
+#### API Calls
+To authenticate requests, set the header "x-wp-api-key" to the API key defined on the Good REST settings page. Request must be application/x-www-form-urlencoded
+```ssh
+curl -X GET \
+  -H "x-wp-api-key: ${API_KEY}" \
+  http://website.com/api/some_route
+ ```
+ 
+##### jQuery AJAX API call example
+#
+```javascript
+var postData = { some_data : "some_data" };
+var postUrl = 'http://website.com/api/some_route';
+
+$.ajax({
+	url: postUrl,
+	dataType: "text",
+	data: postData,
+	type: "GET",
+	timeout: 8000,
+	beforeSend: function(request) {
+		 request.setRequestHeader("x-wp-api-key", apiKey);
 	}
-
-	/**
-	* Add new GET route
-	* 
-	* @since GoodREST (0.1)
-	* @param string $path
-	* @param function $callback
-	* @param array $args
-	*/
-	static public function get($path, $callback, $args = null) {
-		self::add_route($path, array("GET", "OPTIONS"), $callback, $args);
-	}
-
-	/**
-	* Add new POST route
-	* 
-	* @since GoodREST (0.1)
-	* @param string $path
-	* @param function $callback
-	* @param array $args
-	*/
-	static public function post($path, $callback, $args = null) {
-		self::add_route($path, array("POST", "OPTIONS"), $callback, $args);
-	}
-
-	/**
-	* Add new PUT route
-	* 
-	* @since GoodREST (0.1)
-	* @param string $path
-	* @param function $callback
-	* @param array $args
-	*/
-	static public function put($path, $callback, $args = null) {
-		self::add_route($path, array("PUT", "OPTIONS"), $callback, $args);
-	}
-
-	/**
-	* Add new DELETE route
-	* 
-	* @param string $path
-	* @param function $callback
-	* @param array $args
-	*/
-	static public function delete($path, $callback, $args = null) {
-		self::add_route($path, array("DELETE", "OPTIONS"), $callback, $args);
-	}
-
-	/**
-	* Add route to list of routes
-	* 
-	* @param string $path
-	* @param array $http_method
-	* @param function $callback
-	* @param array $args
-	*/
-	public function add_route($path, $http_method, $callback, $args = null) {
-		$route = new stdClass();
-		$route->path = $path;
-		$route->http_method = $http_method;
-		$route->callback = $callback;
-		$route->args = $args;
-		error_log($args['built_in'] );
-		if ($args['built_in'] == true)
-		{
-			
-			self::$built_in_routes[] = $route;
-		}
-		else
-		{
-			self::$custom_routes[] = $route;
-		}
-		
-		
-	}
-
-	/**
-	* Send response to client
-	* 
-	* @param string $path
-	* @param int $status
-	* @param string $content_type
-	*/
-	static public function response($response, $status = 200, $content_type = "text/html") {
-		 status_header( $status );
-		 header("Content-type: " . $content_type);
-		 echo $response;
-		 exit;
-	}
-
-}
-
-endif;
-
-?>
+})
+.fail(function( jqXHR, textStatus, errorThrown) {
+	// Do something with error
+})
+.done(function (data) {
+	// Do something with data
+});
+```

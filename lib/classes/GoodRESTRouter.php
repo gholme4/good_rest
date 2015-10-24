@@ -45,8 +45,9 @@ class GoodRESTRouter {
 	*/
 	public function match_routes() {
 		// Combine built in routes and user defined routes
-		GoodREST::$routes = GoodREST::$built_in_routes + GoodREST::$custom_routes;
+		GoodREST::$routes = array_merge(GoodREST::$built_in_routes, GoodREST::$custom_routes);
 
+		error_log(json_encode(GoodREST::$routes));
 		//  Loop through all defined routes
 		foreach (GoodREST::$routes as $route) {
 
