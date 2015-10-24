@@ -2,7 +2,6 @@
 
 $post_types = get_post_types();
 
-unset($post_types['attachment']);
 unset($post_types['revision']);
 unset($post_types['nav_menu_item']);
 
@@ -22,7 +21,7 @@ if(isset($_POST['save_good_rest_settings'])):
 	update_option('good_rest_api_key', sanitize_text_field($_POST['good_rest_api_key']) );
 	$settings_updated = true;
 	
-	foreach($post_types as $type)
+	foreach($post_types as $key=>$type)
 	{
 		$option = "good_rest_" . $type . "_get_enabled";
 		if ( isset($_POST[$option]) )
@@ -162,7 +161,7 @@ $good_rest_api_key = get_option("good_rest_api_key") ? get_option("good_rest_api
 			</thead>
 			<tbody>
 				<?php
-				foreach(GoodREST::$routes as $route)
+				foreach(GoodREST::$custom_routes as $route)
 				{
 				?>
 				<tr>

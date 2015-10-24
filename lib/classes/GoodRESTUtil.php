@@ -4,8 +4,8 @@
 * Requires PHP 5.3.0 and above
 *
 * @version 0.1
-* @package GoodRESTUtil
-* @link      http://gholme4.github.io/GoodREST/classes/GoodREST.html
+* @package GoodREST
+* @link      https://github.com/gholme4/good_rest/
 * @copyright Copyright (c) 2015 George Holmes II
 * @license   GPLv2 or later
 */

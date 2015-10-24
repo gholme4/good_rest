@@ -1,12 +1,12 @@
 <?php
 /**
 * GoodRESTRouter
-* Class 
+*  
 * Requires PHP 5.3.0 and above
 *
 * @version 0.1
-* @package GoodRESTRouter
-* @link      http://gholme4.github.io/GoodREST/classes/GoodREST.html
+* @package GoodREST
+* @link      https://github.com/gholme4/good_rest/
 * @copyright Copyright (c) 2015 George Holmes II
 * @license   GPLv2 or later
 */
@@ -14,13 +14,6 @@
 if ( ! class_exists( 'GoodRESTRouter' ) ) :
 
 class GoodRESTRouter {
-
-	/**
-	* Array of custom post type routes
-	* 
-	* @var GoodRESTCustomPostTypesRoutes
-	*/
-	protected $post_types_routes = array();
 
 	function __construct() {
 		new GoodRESTCustomPostTypesRoutes();
@@ -31,7 +24,6 @@ class GoodRESTRouter {
 	/**
 	* Get header value
 	* 
-	* @since GoodRESTRouter (.1)
 	* @param string $header
 	*
 	* @return string
@@ -52,6 +44,8 @@ class GoodRESTRouter {
 	* 
 	*/
 	public function match_routes() {
+		// Combine built in routes and user defined routes
+		GoodREST::$routes = GoodREST::$built_in_routes + GoodREST::$custom_routes;
 
 		//  Loop through all defined routes
 		foreach (GoodREST::$routes as $route) {

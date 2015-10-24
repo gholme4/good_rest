@@ -1,12 +1,12 @@
 <?php
 /**
 * GoodRESTPostTypeController
-* Class 
+*  
 * Requires PHP 5.3.0 and above
 *
 * @version 0.1
-* @package GoodRESTPostTypeController
-* @link      http://gholme4.github.io/GoodREST/classes/GoodREST.html
+* @package GoodREST
+* @link      https://github.com/gholme4/good_rest/
 * @copyright Copyright (c) 2015 George Holmes II
 * @license   GPLv2 or later
 */
@@ -45,6 +45,34 @@ class GoodRESTPostTypeController {
 		}
 		else
 		{
+			// Get other data associated with this post
+			$post_meta = get_post_meta($params['id']);
+			if (is_array($post_meta) && sizeof($post_meta)) {
+				foreach($post_meta as $k => $v)
+				{
+					$post->$k = $v[0];
+				}
+			}
+			
+			// Set permalink
+			$post->permalink = get_permalink( $post->ID );
+			// Get post tags
+			$post->tags = get_the_tags($post->ID);
+			// Get post categories
+			$post->categories = get_the_category( $post->ID );
+			
+			// Get thumbnails of each available size and add them to the post object
+			$thumbnail_id = get_post_thumbnail_id( $post->ID);
+			$images_sizes = get_intermediate_image_sizes();
+			$post->thumbnail = array();
+			foreach ($images_sizes as $size) {
+				$image = NULL;
+				$image = wp_get_attachment_image_src( $thumbnail_id, $size);
+				$post->thumbnail[$size] = $image[0];
+			}
+			$full_image = wp_get_attachment_image_src( $thumbnail_id, "full");
+			$post->thumbnail["full"] = $full_image[0];
+			$post->timestamp = get_the_time('U', $id);
 			$response->post = $post;
 		}
 
@@ -58,7 +86,27 @@ class GoodRESTPostTypeController {
 	*
 	*/
 	public function post($params) {
-		GoodREST::response("", 200);
+		if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
+		{
+        	
+        	define( 'GR_SAVE_POST_DATA', TRUE ); 
+
+ 			$response = new stdClass();
+			$params['post_type'] = $this->post_type;
+
+			$result = wp_insert_post($params);
+
+			if ($result)
+			{
+				$response->post = get_post($result);
+			}
+			else
+			{
+				$response->error = _("Post insert failed.");
+			}
+
+			GoodREST::response(json_encode($response), 200);
+		}
 	}
 
 	/**
@@ -133,7 +181,15 @@ class GoodRESTPostTypeController {
 	*
 	*/
 	public function query($params) {
-		GoodREST::response("", 200);
+		if ( ! defined( 'GR_SAVE_POST_DATA' ) ) 
+		{
+
+			define( 'GR_SAVE_POST_DATA', TRUE );
+			
+			$params['post_type'] = $this->post_type;
+			$posts = get_posts($params);
+			GoodREST::response(json_encode($posts), 200);
+		}
 	}
 	
 

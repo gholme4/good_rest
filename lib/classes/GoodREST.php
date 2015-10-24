@@ -6,7 +6,7 @@
 *
 * @version 0.1
 * @package GoodREST
-* @link      http://gholme4.github.io/GoodREST/classes/GoodREST.html
+* @link      https://github.com/gholme4/good_rest/
 * @copyright Copyright (c) 2015 George Holmes II
 * @license   GPLv2 or later
 */
@@ -42,6 +42,13 @@ class GoodREST {
 	* @var array $built_in_routes
 	*/
 	static public $built_in_routes = array();
+	
+	/**
+	* Array of user defined routes
+	* 
+	* @var array $custom_routes
+	*/
+	static public $custom_routes = array();
 
 	/**
 	* GoodRESTRouter instance
@@ -80,7 +87,7 @@ class GoodREST {
 	* @param array $args
 	*/
 	static public function get($path, $callback, $args = null) {
-		self::add_route($path, array("GET"), $callback, $args);
+		self::add_route($path, array("GET", "OPTIONS"), $callback, $args);
 	}
 
 	/**
@@ -92,7 +99,7 @@ class GoodREST {
 	* @param array $args
 	*/
 	static public function post($path, $callback, $args = null) {
-		self::add_route($path, array("POST"), $callback, $args);
+		self::add_route($path, array("POST", "OPTIONS"), $callback, $args);
 	}
 
 	/**
@@ -132,7 +139,17 @@ class GoodREST {
 		$route->http_method = $http_method;
 		$route->callback = $callback;
 		$route->args = $args;
-		self::$routes[] = $route;
+		error_log($args['built_in'] );
+		if ($args['built_in'] == true)
+		{
+			
+			self::$built_in_routes[] = $route;
+		}
+		else
+		{
+			self::$custom_routes[] = $route;
+		}
+		
 		
 	}
 
