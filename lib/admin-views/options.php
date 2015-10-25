@@ -140,7 +140,7 @@ $good_rest_api_key = get_option("good_rest_api_key") ? get_option("good_rest_api
 					<?php $option = "good_rest_" . $type . "_query_enabled"; ?>
 					<td><input type="checkbox" name="<?php echo $option; ?>" <?php if (get_option($option) == true) echo "checked"; ?> value="true"/></td>
 					<td><?php _e("POST"); ?></td>
-					<td><?php echo get_site_url() . '/' . $api_endpoint_prefix  . '/' . $type . "/q"; ?></td>
+					<td><?php echo get_site_url() . '/' . $api_endpoint_prefix  . '/q/' . $type; ?></td>
 				</tr>
 
 				<?php
