@@ -3,7 +3,7 @@
  * Plugin Name: Good REST
  * Description: Developer plugin for creating RESTful routes. 
  * Version: 1.0
- * Plugin URI: http://me.georgeholmesii.com/
+ * Plugin URI: https://github.com/gholme4/good_rest
  * Author: George Holmes II
  * Author URI: http://georgeholmesii.com
  */
