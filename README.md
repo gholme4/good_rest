@@ -3,7 +3,7 @@
 Good REST is a WordPress plugin designed to open add REST API functionality to WordPress installations. This plugin is only intended to allow remote requests and not local routing. Features include:
 
   - Developer defined routes similar to Slim framework format
-  - User enabled built-in routes from registerd post types
+  - User enabled built-in routes from registered post types
   - API key authentication
   - Dashboard page for managing plugin settings
 
